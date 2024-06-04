@@ -1,0 +1,15 @@
+{
+  "name": "avature/jobberwocky",
+  "description": "Service that works as a store for job opportunities",
+  "authors": [
+    {
+      "name": "Pablo Cerbino",
+      "email": "pcerbino@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Jobberwocky\\": "src/"
+    }
+  }
+}
