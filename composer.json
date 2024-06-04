@@ -16,6 +16,7 @@
     "phpunit/phpunit": "^11.1"
   },
   "require": {
+    "ext-pdo_sqlite": "*",
     "slim/slim": "^4.13",
     "slim/psr7": "^1.6",
     "slim/http": "^1.3"
