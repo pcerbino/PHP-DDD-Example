@@ -3,6 +3,7 @@
 namespace Jobberwocky\Jobs\Infrastructure;
 
 use Jobberwocky\Jobs\Domain\JobRepositoryInterface;
+use Jobberwocky\Jobs\Domain\JobRepositoryAdapterResponse;
 use Jobberwocky\Jobs\Domain\Job;
 use Jobberwocky\Jobs\Domain\JobId;
 use PDO;
@@ -10,18 +11,21 @@ use PDO;
 class JobRepositorySQLite implements JobRepositoryInterface
 {
     private PDO $pdo;
+    private JobRepositoryAdapterResponse $adapter;
 
-    public function __construct()
+    public function __construct($adapter)
     {
         $this->pdo = new PDO('sqlite:../database/sqlite.db');
         $this->checkJobTable();
+
+        $this->adapter = $adapter;
     }
 
     private function checkJobTable(): void
     {
         $this->pdo->exec('
             CREATE TABLE IF NOT EXISTS jobs 
-            (id INTEGER PRIMARY KEY, title TEXT, company TEXT, description TEXT)
+            (id INTEGER PRIMARY KEY, title TEXT, country TEXT, salary TEXT)
         ');
         $this->pdo->exec('
             CREATE TABLE IF NOT EXISTS job_keywords 
@@ -33,12 +37,12 @@ class JobRepositorySQLite implements JobRepositoryInterface
     {
         if ($job->id() === null) {
             $stmt = $this->pdo->prepare('
-                INSERT INTO jobs VALUES (null, :title, :company, :description)
+                INSERT INTO jobs VALUES (null, :title, :country, :salary)
             ');
             $stmt->execute([
-                'title' => $job->title(),
-                'company' => $job->company(),
-                'description' => $job->description()
+                'title' => $job->title()->value(),
+                'country' => $job->country()->value(),
+                'salary' => $job->salary()->value()
             ]);
             $jobId = new JobId($this->pdo->lastInsertId());
             $job->setId($jobId);
@@ -46,14 +50,14 @@ class JobRepositorySQLite implements JobRepositoryInterface
         } else {
             $stmt = $this->pdo->prepare('
                 UPDATE jobs 
-                SET title = :title, company = :company, description = :description 
+                SET title = :title, country = :country, salary = :salary 
                 WHERE id = :id
             ');
             $stmt->execute([
-                'id' => $job->id(),
-                'title' => $job->title(),
-                'company' => $job->company(),
-                'description' => $job->description()
+                'id' => $job->id()->value(),
+                'title' => $job->title()->value(),
+                'country' => $job->country()->value(),
+                'salary' => $job->salary()->value()
             ]);
         }
 
@@ -67,7 +71,7 @@ class JobRepositorySQLite implements JobRepositoryInterface
         }
     }
 
-    public function findByKeyword($keyword): array
+    public function findByKeyword($keyword): JobRepositoryAdapterResponse
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM jobs 
@@ -77,6 +81,7 @@ class JobRepositorySQLite implements JobRepositoryInterface
         ");
         $stmt->execute(['keyword' => $keyword]);
         $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $jobs;
+
+        return $this->adapter->createAdapter($jobs);
     }
 }
