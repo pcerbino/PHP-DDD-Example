@@ -11,7 +11,7 @@ class JobController
 {
     public function __construct(
         private readonly CreateJobService $createJobService,
-        private FindJobByKeywordService $findJobByKeywordService
+        private readonly FindJobByKeywordService $findJobByKeywordService
     ) {
     }
 
@@ -21,16 +21,16 @@ class JobController
 
         $job = $this->createJobService->execute(
             $data['title'],
-            $data['company'],
-            $data['description'],
+            $data['country'],
+            $data['salary'],
             $data['keywords']
         );
 
         $response->getBody()->write(json_encode([
             'id' => $job->id()->value(),
             'title' => $job->title()->value(),
-            'description' => $job->description()->value(),
-            'company' => $job->company()->value(),
+            'salary' => $job->salary()->value(),
+            'country' => $job->country()->value(),
             'keywords' => $job->keywords()->list()
         ]));
 
