@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jobberwocky\Jobs\Application;
 
-use Jobberwocky\Jobs\Domain\JobCompany;
-use Jobberwocky\Jobs\Domain\JobDescription;
+use Jobberwocky\Jobs\Domain\JobCountry;
+use Jobberwocky\Jobs\Domain\JobSalary;
 use Jobberwocky\Jobs\Domain\JobRepositoryInterface;
 use Jobberwocky\Jobs\Domain\JobTitle;
 use Jobberwocky\Jobs\Domain\Job;
@@ -18,12 +18,12 @@ class CreateJobService
     ) {
     }
 
-    public function execute(string $title, string $company, string $description, array $keywords): Job
+    public function execute(string $title, string $country, int $salary, array $keywords): Job
     {
         $job = new Job(
             new JobTitle($title), 
-            new JobCompany($company),
-            new JobDescription($description),
+            new JobCountry($country),
+            new JobSalary($salary),
             new JobKeywords($keywords)
         );
         $this->jobRepository->create($job);
