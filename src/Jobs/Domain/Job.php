@@ -9,9 +9,9 @@ final class Job {
     private ?JobId $id = null;
 
     public function __construct(
-        private JobTitle $title,
-        private JobCompany $company,
-        private JobDescription $description,
+        private JobTitle    $title,
+        private JobCountry  $country,
+        private JobSalary   $salary,
         private JobKeywords $keywords
     ) {
     }
@@ -21,9 +21,9 @@ final class Job {
         return $this->id;
     }
 
-    public function company(): JobCompany
+    public function country(): JobCountry
     {
-        return $this->company;
+        return $this->country;
     }
 
     public function title(): JobTitle
@@ -31,9 +31,9 @@ final class Job {
         return $this->title;
     }
 
-    public function description(): JobDescription
+    public function salary(): JobSalary
     {
-        return $this->description;
+        return $this->salary;
     }
 
     public function keywords(): JobKeywords
@@ -41,7 +41,7 @@ final class Job {
         return $this->keywords;
     }
 
-    public function setId(JobId $id)
+    public function setId(JobId $id): void
     {
         $this->id = $id;
     }
