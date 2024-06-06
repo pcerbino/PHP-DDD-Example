@@ -18,14 +18,14 @@ $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 $app = AppFactory::create();
-$client = new GuzzleHttp\Client();
+$client = new GuzzleHttp\Client(['base_uri' => $_ENV['JobberwockyExteneralJobsAPI']]);
 
 $localAdapter = new JobRepositorySQLiteAdapter();
 $localRepository = new JobRepositorySQLite($localAdapter);
 $createJobService = new CreateJobService($localRepository);
 
 $remoteAdapter = new JobRepositoryJobberWockyAPIAdapter();
-$remoteRepository = new JobRepositoryJobberWockyAPI($client, $_ENV['JobberwockyExteneralJobsAPI'], $remoteAdapter);
+$remoteRepository = new JobRepositoryJobberWockyAPI($client, $remoteAdapter);
 
 $findJobService = new FindJobByKeywordService($localRepository, $remoteRepository);
 
