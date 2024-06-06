@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Jobberwocky\Jobs\Interfaces\Http\Controller;
 
@@ -11,20 +11,38 @@ class JobController
 {
     public function __construct(
         private readonly CreateJobService $createJobService,
-        private readonly FindJobByKeywordService $findJobByKeywordService
-    ) {
-    }
+        private FindJobByKeywordService $findJobByKeywordService
+    ) { }
 
     public function createJob(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
 
-        $job = $this->createJobService->execute(
-            $data['title'],
-            $data['country'],
-            $data['salary'],
-            $data['keywords']
-        );
+        if (
+            !isset($data['title']) 
+            || !isset($data['country']) 
+            || !isset($data['salary']) 
+            || !isset($data['keywords'])
+        ) {
+            return $response
+                ->withStatus(400)
+                ->withHeader('Content-Type', 'application/json')
+                ->write(json_encode(['error' => 'Missing required fields']));
+        }
+
+        try {
+            $job = $this->createJobService->execute(
+                $data['title'],
+                $data['country'],
+                $data['salary'],
+                $data['keywords']
+            );
+        } catch (\Exception $e) { // Implement better exception handling
+            return  $response
+                ->withStatus(500)
+                ->withHeader('Content-Type', 'application/json')
+                ->write(json_encode(['error' => 'An error occurred']));
+        }
 
         $response->getBody()->write(json_encode([
             'id' => $job->id()->value(),
@@ -40,6 +58,14 @@ class JobController
     public function findJob(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
+
+        if (!isset($data['keyword'])) {
+            return $response
+                ->withStatus(400)
+                ->withHeader('Content-Type', 'application/json')
+                ->write(json_encode(['error' => 'Missing required field keyword']));
+        }
+
         $jobs = $this->findJobByKeywordService->execute($data['keyword']);
         $response->getBody()->write(json_encode($jobs));
 
