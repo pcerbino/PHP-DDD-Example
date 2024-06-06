@@ -6,12 +6,17 @@ use Jobberwocky\Jobs\Domain\JobRepositoryAdapterResponse;
 
 class JobRepositoryJobberWockyAPIAdapter implements JobRepositoryAdapterResponse
 {
-    public array $jobs = [];
+    private array $jobs = [];
 
     public function createAdapter(array $jobs): JobRepositoryAdapterResponse
     {
         $this->adaptJobs($jobs);
         return $this;
+    }
+
+    public function getJobs(): array
+    {
+        return $this->jobs;
     }
 
     private function adaptJobs(array $jobs): void

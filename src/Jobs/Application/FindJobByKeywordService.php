@@ -14,9 +14,13 @@ class FindJobByKeywordService
 
     public function execute(string $keyword)
     {
+        if (empty($keyword))
+        {
+            throw new \InvalidArgumentException('Keyword is required');
+        }
         $jobs = array_merge(
-            $this->jobRepositoryLocal->findByKeyword($keyword)->jobs,
-            $this->jobRepositoryRemote->findByKeyword($keyword)->jobs
+            $this->jobRepositoryLocal->findByKeyword($keyword)->getJobs(),
+            $this->jobRepositoryRemote->findByKeyword($keyword)->getJobs()
         );
         return $jobs;
     }
