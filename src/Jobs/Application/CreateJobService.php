@@ -18,8 +18,18 @@ class CreateJobService
     ) {
     }
 
-    public function execute(string $title, string $country, int $salary, array $keywords): Job
+    public function execute(
+        string $title, 
+        string $country, 
+        int $salary, 
+        array $keywords
+    ): Job
     {
+        if (empty($title) || empty($country) || empty($salary) || empty($keywords))
+        {
+            throw new \InvalidArgumentException('All fields are required');
+        }
+
         $job = new Job(
             new JobTitle($title), 
             new JobCountry($country),

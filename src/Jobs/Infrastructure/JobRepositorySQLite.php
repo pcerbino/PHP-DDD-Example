@@ -61,10 +61,16 @@ class JobRepositorySQLite implements JobRepositoryInterface
             ]);
         }
 
-        $stmt = $this->pdo->prepare("DELETE FROM job_keywords WHERE job_id = :job_id");
+        $stmt = $this->pdo->prepare('
+            DELETE FROM job_keywords 
+            WHERE job_id = :job_id
+        ');
         $stmt->execute(['job_id' => $job->id()]);
 
-        $stmt = $this->pdo->prepare("INSERT INTO job_keywords (job_id, keyword) VALUES (:job_id, :keyword)");
+        $stmt = $this->pdo->prepare('
+            INSERT INTO job_keywords (job_id, keyword) 
+            VALUES (:job_id, :keyword)
+        ');
 
         foreach ($job->keywords()->list() as $keyword) {
             $stmt->execute(['job_id' => $job->id(), 'keyword' => $keyword]);
