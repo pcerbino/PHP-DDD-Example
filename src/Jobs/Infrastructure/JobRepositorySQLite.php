@@ -82,10 +82,11 @@ class JobRepositorySQLite implements JobRepositoryInterface
         $stmt = $this->pdo->prepare("
             SELECT * FROM jobs 
             WHERE id IN (
-                SELECT job_id FROM job_keywords WHERE keyword = :keyword
+                SELECT job_id FROM job_keywords 
+                WHERE LOWER(keyword) = :keyword
             )
         ");
-        $stmt->execute(['keyword' => $keyword]);
+        $stmt->execute(['keyword' => strtolower($keyword)]);
         $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $this->adapter->createAdapter($jobs);
