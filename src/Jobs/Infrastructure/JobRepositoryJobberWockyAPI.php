@@ -14,14 +14,10 @@ class JobRepositoryJobberWockyAPI implements JobRepositoryInterface
 
     public function __construct(
         private Client $client, 
-        string $baseUri, 
         JobRepositoryAdapterResponse $adapter
     )
     {
-        $this->client = new Client([
-            'base_uri' => $baseUri
-        ]);
-
+        $this->client = $client;
         $this->adapter = $adapter;
     }
 
