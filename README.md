@@ -1,19 +1,17 @@
-## PHP DDD Framework less boilerplate
+## PHP DDD Boilerplate
 
 ### Introduction
 
-This repository is a technical exercise whose objective is to experiment in the implementation of DDD architecture without using any framework..
+This repository is a technical exercise aimed at experimenting with the implementation of a DDD (Domain-Driven Design) architecture **without relying on any external framework**.
 
-The following are some considerations and comments about it:
+Below are some considerations and notes about this work:
 
-- I have implemented the DDD architecture, with which I am taking my first steps, resorting to repositories with examples and tutorials following the guidelines in which I have observed a general consensus. 
+- I chose to build this experiment without a framework in order to focus on applying DDD using only the core principles I gathered during my research.  
 
-- I decided to do this experiment without using any framework, since I would like to implement DDD following the basic principles I got from my research. 
+#### Areas for improvement
 
-- Some things that could be improved:
-
-    - Implementation of a service container.
-    - More testing coverage.
+    - Implementation a service container.
+    - Increasing test coverage.
     - Better error handling.
     - Docker implementation.
 
